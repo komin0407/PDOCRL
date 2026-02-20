@@ -1,0 +1,8 @@
+gym>=0.26.0
+pybullet>=3.0.6
+bullet_safety_gym==1.4.0
+safety-gymnasium==0.4.0
+numpy
+
+[metadrive]
+metadrive-simulator @ git+https://github.com/HenryLHH/metadrive_clean.git@main
