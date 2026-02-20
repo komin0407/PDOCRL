@@ -55,6 +55,7 @@ The implemented offline safe RL and imitation learning algorithms include:
 | BEAR-Lag            | Q-learning           | [BEARL](https://arxiv.org/abs/1906.00949) with [PID Lagrangian](https://arxiv.org/abs/2007.03964)   |
 | CPQ                 | Q-learning           | [Constraints Penalized Q-learning (CPQ))](https://arxiv.org/abs/2107.09003) |
 | COptiDICE           | Distribution Correction Estimation           | [Offline Constrained Policy Optimization via stationary DIstribution Correction Estimation](https://arxiv.org/abs/2204.08957) |
+| PDOCRL           | Dual Based Algorithm           | [Offline Constrained Reinforcement Learning under Partial Data Coverage](https://arxiv.org/pdf/2505.17506) |
 | CDT                 | Sequential Modeling | [Constrained Decision Transformer](https://arxiv.org/abs/2302.07351) |
 | BC-All                 | Imitation Learning | [Behavior Cloning](https://arxiv.org/abs/2302.07351) with all datasets |
 | BC-Safe                 | Imitation Learning | [Behavior Cloning](https://arxiv.org/abs/2302.07351) with safe trajectories |
