@@ -253,23 +253,28 @@ class PDOCRL(nn.Module):
         }
         return loss_actor, stats_actor
 
-    def dual_update(self, costs):
+    def dual_update(self, observations, actions, costs):
         """
-        Dual variable player: soft projected gradient ascent on constraint
-        violation.
+        Dual variable player: gradient descent on lambda (min over lambda).
 
-        Uses the batch-averaged cost as the constraint signal. This correctly
-        measures whether the current policy violates the cost constraint:
+        From the Lagrangian L = ... + (1/n)Σ w_j(r - λc)_j - λτ,
+        taking ∂L/∂λ = -(1/n)Σ w_j·c_j - τ and doing gradient descent:
+            λ ← λ - η·∂L/∂λ = λ + η·((1/n)Σ w_j·c_j - τ)
+
+        The importance-weighted cost E_w[c] = (w·c).mean() is the correct
+        constraint signal (reflects the -<λ, τ> term via the -τ part):
           - constraint_violation > 0  →  policy too costly  →  increase lambda
           - constraint_violation < 0  →  policy too safe    →  decrease lambda
-
-        This allows lambda to self-regulate toward the constraint boundary
-        (cost ≈ cost_threshold) rather than collapsing to cost = 0.
         """
-        # direct cost signal: batch mean cost vs per-step threshold
-        constraint_violation = costs.mean().detach() - self.cost_threshold
+        with torch.no_grad():
+            w_in = torch.cat([observations, actions], dim=-1)
+            w_vals = self.w_net(w_in).squeeze(-1)
+            w_vals = torch.clamp(w_vals, 0.0, 10.0)
 
-        # soft gradient ascent (not bang-bang, more stable)
+        # importance-weighted cost vs per-step threshold (reflects -<λ, τ> term)
+        constraint_violation = (w_vals * costs).mean().detach() - self.cost_threshold
+
+        # gradient descent on lambda
         self.log_lambda = (self.log_lambda +
                            self.lambda_lr * constraint_violation)
         self.log_lambda.data.clamp_(
@@ -280,6 +285,7 @@ class PDOCRL(nn.Module):
             "misc/lambda": self._lam().item(),
             "misc/constraint_violation": constraint_violation.item(),
             "misc/cost_threshold": self.cost_threshold,
+            "misc/w_weighted_cost": (w_vals * costs).mean().item(),
         }
         return stats_dual
 
@@ -368,8 +374,8 @@ class PDOCRLTrainer:
         loss_actor, stats_actor = self.model.actor_loss(
             observations, next_observations, actions
         )
-        # 4. lambda-player (dual gradient ascent)
-        stats_dual = self.model.dual_update(costs)
+        # 4. lambda-player (dual gradient descent, -<λ,τ> reflected via importance weights)
+        stats_dual = self.model.dual_update(observations, actions, costs)
         # 5. sync target Q-network
         self.model.sync_weight()
 
