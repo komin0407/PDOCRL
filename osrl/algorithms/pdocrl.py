@@ -168,6 +168,9 @@ class PDOCRL(nn.Module):
         stats_w = {
             "loss/w_loss": loss_w.item(),
             "misc/w_mean": w_vals.mean().item(),
+            "misc/w_std": w_vals.std().item(),
+            "misc/w_max": w_vals.max().item(),
+            "misc/w_min": w_vals.min().item(),
         }
         return loss_w, stats_w
 
@@ -269,7 +272,7 @@ class PDOCRL(nn.Module):
         with torch.no_grad():
             w_in = torch.cat([observations, actions], dim=-1)
             w_vals = self.w_net(w_in).squeeze(-1)
-            w_vals = torch.clamp(w_vals, 0.0, 10.0)
+            #w_vals = torch.clamp(w_vals, 0.0, 10.0)
 
         # importance-weighted cost vs per-step threshold (reflects -<λ, τ> term)
         constraint_violation = (w_vals * costs).mean().detach() - self.cost_threshold
