@@ -257,7 +257,7 @@ class PDOCRL(nn.Module):
         Simple cost signal without importance weighting:
             λ ← λ + η · costs.mean()
         """
-        constraint_violation = costs.mean().detach()
+        constraint_violation = costs.mean().detach() - self.cost_threshold
 
         # gradient descent on lambda
         self.log_lambda = (self.log_lambda +
