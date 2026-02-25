@@ -59,6 +59,7 @@ class PDOCRL(nn.Module):
             slater_phi: float = 0.1,
             cost_limit: int = 10,
             episode_len: int = 300,
+            init_lambda: float = 1.0,
             device: str = "cpu"):
 
         super().__init__()
@@ -104,7 +105,7 @@ class PDOCRL(nn.Module):
         ).to(device)
 
         # log-dual variable; exp(log_lambda) in [0, dual_bound]
-        self.log_lambda = torch.tensor(0.0, device=device)
+        self.log_lambda = torch.tensor(math.log(init_lambda), device=device)
 
     # ------------------------------------------------------------------
     # helpers

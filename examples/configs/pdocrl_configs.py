@@ -45,6 +45,7 @@ class PDOCRLTrainConfig:
     tau: float = 0.005
     num_q: int = 2
     slater_phi: float = 0.1
+    init_lambda: float = 1.0
     # evaluation params
     eval_episodes: int = 10
     eval_every: int = 2500

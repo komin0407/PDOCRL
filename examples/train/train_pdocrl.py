@@ -91,6 +91,7 @@ def train(args: PDOCRLTrainConfig):
         slater_phi=args.slater_phi,
         cost_limit=args.cost_limit,
         episode_len=args.episode_len,
+        init_lambda=args.init_lambda,
         device=args.device,
     )
     print(f"Total parameters: {sum(p.numel() for p in model.parameters())}")
