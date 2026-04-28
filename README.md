@@ -34,35 +34,50 @@ pip install osrl-lib
 
 You can also pull the repo and install:
 ```bash
-git clone https://github.com/liuzuxin/OSRL.git
-cd osrl
+git clone https://github.com/komin0407/PDOCRL.git
+cd PDOCRL
 pip install -e .
+
+```
+The offline datasets and environments are provided by [DSRL](https://github.com/liuzuxin/DSRL). Install it as well:
+```bash
+pip install dsrl
 ```
 
 If you want to use the `CDT` algorithm, please also manually install the `OApackage`:
 ```bash
 pip install OApackage==2.7.6
 ```
+## How to use
 
-## How to use OSRL
+The example scripts are in the `examples` folder. All parameters and their default configs are in `examples/configs/`. This repo uses [Pyrallis](https://github.com/eladrich/pyrallis) for configuration and [WandbLogger](https://github.com/liuzuxin/FSRL) for logging.
 
-The example usage are in the `examples` folder, where you can find the training and evaluation scripts for all the algorithms. 
-All the parameters and their default configs for each algorithm are available in the `examples/configs` folder. 
-OSRL uses the `WandbLogger` in [FSRL](https://github.com/liuzuxin/FSRL) and [Pyrallis](https://github.com/eladrich/pyrallis) configuration system. The offline dataset and offline environments are provided in [DSRL](https://github.com/liuzuxin/DSRL), so make sure you install both of them first.
+### Training PDOCRL
+```shell
+python examples/train/train_pdocrl.py --task OfflineCarCircle-v0 --cost_limit 10 --device cpu
+```
 
-### Training
-For example, to train the `bcql` method, simply run by overriding the default parameters:
-
+### Training baselines
+For example, to train `bcql`:
 ```shell
 python examples/train/train_bcql.py --task OfflineCarCircle-v0 --param1 args1 ...
 ```
-By default, the config file and the logs during training will be written to `logs\` folder and the training plots can be viewed online using Wandb.
+Config files and logs during training are written to the `logs/` folder. Training plots can be viewed online via Wandb.
 
-You can also launch a sequence of experiments or in parallel via the [EasyRunner](https://github.com/liuzuxin/easy-runner) package, see `examples/train_all_tasks.py` for details.
+You can also run all tasks in parallel:
+```shell
+python examples/train_all_tasks.py
+```
 
 ### Evaluation
-To evaluate a trained agent, for example, a BCQ agent, simply run
+To evaluate a trained PDOCRL agent:
+```shell
+python examples/eval/eval_pdocrl.py --path path_to_model --eval_episodes 20
+```
+
+To evaluate a baseline, e.g. BCQ-Lag:
 ```shell
 python examples/eval/eval_bcql.py --path path_to_model --eval_episodes 20
 ```
-It will load config file from `path_to_model/config.yaml` and model file from `path_to_model/checkpoints/model.pt`, run 20 episodes, and print the average normalized reward and cost. The pretrained checkpoints for all datasets are available [here](https://drive.google.com/drive/folders/1lZmw2NVNR4YGUdrkih9o3rTMDrWCI_jw?usp=sharing) for reference.
+
+Each eval script loads `path_to_model/config.yaml` and `path_to_model/checkpoints/model.pt`, runs the specified number of episodes, and prints the average normalized reward and cost.
