@@ -1,4 +1,4 @@
-# reference: https://arxiv.org/abs/2505.17506
+# reference: [anonymous paper]
 import math
 from copy import deepcopy
 
@@ -16,7 +16,7 @@ class PDOCRL(nn.Module):
     """
     Primal-Dual algorithm for Offline Constrained RL (PDOCRL)
 
-    Implements Algorithm 2 from Hong & Tewari (2025) with deep function
+    Implements Algorithm 2 from Anonymous et al. (2025) with deep function
     approximation. Uses an importance weight network (w), an augmented
     Q-network (Q), a softmax-policy actor (pi), and a scalar dual variable
     (lambda) for the cost constraint.
@@ -205,7 +205,7 @@ class PDOCRL(nn.Module):
         """
         Policy player: mirror-descent approximation via policy gradient.
 
-        Implements the two-term actor gradient from Eq. (3) of Hong & Tewari (2025):
+        Implements the two-term actor gradient from Eq. (3) of Anonymous et al. (2025):
             ∇π L̂ = (1-γ) ∇π Q(s₀, π(s₀))
                   + γ/n Σⱼ w(sⱼ,aⱼ) ∇π Q(s'ⱼ, π(s'ⱼ))
 

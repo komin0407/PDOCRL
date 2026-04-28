@@ -1,4 +1,4 @@
-# Section 3.1 of Hong & Tewari (2025) arXiv:2505.17506
+# Section 3.1 of the paper
 # Saddle-point formulation: min_V max_w L(w, V)
 # Policy extracted via w-weighted MLE (Eq. 5).
 import math
@@ -17,7 +17,7 @@ from osrl.common.net import SquashedGaussianMLPActor, mlp
 class PDOCRL_W(nn.Module):
     """
     PDOCRL without Q-network: min_V max_w saddle-point on the Lagrangian
-    from Section 3.1 of Hong & Tewari (2025), Eq. (4):
+    from Section 3.1 of Anonymous et al. (2025), Eq. (4):
 
         min_V max_w [(1-γ)·E[V(s₀)] + E_D[w(s,a)·e(s,a,s')]]
 
@@ -208,7 +208,7 @@ class PDOCRL_W(nn.Module):
 
     def actor_loss(self, observations, actions):
         """
-        Policy extraction via w-weighted MLE (Eq. 5 of Hong & Tewari 2025):
+        Policy extraction via w-weighted MLE (Eq. 5 of Anonymous et al. 2025):
             actor_loss = −E_D[w(s,a) · log π(a|s)]
         No Q-gradient; purely supervised by dataset actions weighted by w.
         """
