@@ -81,13 +81,4 @@ python examples/eval/eval_bcql.py --path path_to_model --eval_episodes 20
 
 Each eval script loads `path_to_model/config.yaml` and `path_to_model/checkpoints/model.pt`, runs the specified number of episodes, and prints the average normalized reward and cost.
 
-## Citation
 
-If you find this work useful, please cite:
-```bibtex
-@article{pdocrl2025,
-  title={Offline Constrained Reinforcement Learning under Partial Data Coverage},
-  author={Anonymous},
-  year={2025}
-}
-```
